@@ -12,3 +12,8 @@ export const getAllUserService = async () => {
   const result = await UserModel.find({});
   return result;
 };
+
+export const getSingleUserService = async (id: string) => {
+  const result = await UserModel.findOne({ userId: id });
+  return result;
+};
