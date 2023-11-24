@@ -4,12 +4,23 @@ import {
   getAllUserService,
   getSingleUserService,
 } from "./user.services";
+import { userJoiSchema } from "./user.validation";
 
 // User Create Controller
 export const createUserController = async (req: Request, res: Response) => {
   try {
     const userData = req.body;
-    const result = await createUserService(userData);
+    const { error, value } = userJoiSchema.validate(userData);
+    const result = await createUserService(value);
+
+    if (error) {
+      res.status(500).json({
+        success: false,
+        message: "User created unsuccessfully!",
+        data: error.details,
+      });
+    }
+
     res.status(200).json({
       success: true,
       message: "User created successfully!",
