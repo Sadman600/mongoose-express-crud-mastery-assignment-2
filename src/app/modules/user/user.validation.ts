@@ -30,7 +30,7 @@ export const userJoiSchema = Joi.object({
   username: Joi.string().required().trim().messages({
     message: "Username is required",
   }),
-  password: Joi.string().required().trim().messages({
+  password: Joi.string().max(20).required().trim().messages({
     message: "Password is required",
   }),
   fullName: fullNameJoiSchema.required(),

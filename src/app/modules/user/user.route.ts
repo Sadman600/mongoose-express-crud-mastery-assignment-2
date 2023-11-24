@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUserController,
+  deleteUserController,
   getAllUserController,
   getSingleUserController,
 } from "./user.controller";
@@ -13,5 +14,7 @@ userRoute.post("/", createUserController);
 userRoute.get("/", getAllUserController);
 // Get single  user route
 userRoute.get("/:userId", getSingleUserController);
+// Delete a user route
+userRoute.delete("/:userId", deleteUserController);
 
 export default userRoute;

@@ -17,3 +17,8 @@ export const getSingleUserService = async (id: string) => {
   const result = await UserModel.findOne({ userId: id });
   return result;
 };
+
+export const deleteUserService = async (id: string) => {
+  const result = await UserModel.updateOne({ userId: id }, { isActive: false });
+  return result;
+};

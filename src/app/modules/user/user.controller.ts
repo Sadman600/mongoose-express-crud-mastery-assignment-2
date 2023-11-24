@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
   createUserService,
+  deleteUserService,
   getAllUserService,
   getSingleUserService,
 } from "./user.services";
@@ -26,10 +27,10 @@ export const createUserController = async (req: Request, res: Response) => {
       message: "User created successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "User created unsuccessfully!",
+      message: error.message || "User created unsuccessfully!",
       data: error,
     });
   }
@@ -62,11 +63,29 @@ export const getSingleUserController = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     res.status(500).json({
       success: false,
       message: "User fetched unsuccessfully!",
+      data: error,
+    });
+  }
+};
+
+export const deleteUserController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const result = await deleteUserService(userId);
+    res.status(200).json({
+      success: true,
+      message: "User delete successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "User delete unsuccessfully!",
       data: error,
     });
   }
