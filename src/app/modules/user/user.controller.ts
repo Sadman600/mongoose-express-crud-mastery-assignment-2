@@ -44,7 +44,7 @@ export const getAllUserController = async (req: Request, res: Response) => {
       message: "User fetched successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
       message: "User fetched unsuccessfully!",
@@ -62,13 +62,13 @@ export const getSingleUserController = async (req: Request, res: Response) => {
       message: "User fetched successfully!",
       data: result,
     });
-  } catch (error) {
+  } catch (error: any) {
     // console.log(error);
 
     res.status(500).json({
       success: false,
-      message: "User fetched unsuccessfully!",
-      data: error,
+      message: error.message,
+      error: { code: 404, description: "User not found!" },
     });
   }
 };

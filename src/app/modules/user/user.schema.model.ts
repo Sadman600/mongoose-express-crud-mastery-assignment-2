@@ -1,33 +1,44 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 
-import { TAddress, TFullName, TUser } from "./user.interface";
+import { TAddress, TFullName, TUser, TUserModel } from "./user.interface";
 import config from "../../config";
+import { func } from "joi";
 
-const userFullNameSchema = new Schema<TFullName>({
-  firstName: {
-    type: String,
-    required: [true, "First name is required"],
-    trim: true,
-    maxlength: [15, " First name cannot be more than 15 characters"],
+const userFullNameSchema = new Schema<TFullName>(
+  {
+    firstName: {
+      type: String,
+      required: [true, "First name is required"],
+      trim: true,
+      maxlength: [15, " First name cannot be more than 15 characters"],
+    },
+    lastName: {
+      type: String,
+      required: [true, "Last name is required"],
+      trim: true,
+      maxlength: [15, " First name cannot be more than 15 characters"],
+    },
   },
-  lastName: {
-    type: String,
-    required: [true, "Last name is required"],
-    trim: true,
-    maxlength: [15, " First name cannot be more than 15 characters"],
+  { _id: false }
+);
+const userAddressSchema = new Schema<TAddress>(
+  {
+    street: {
+      type: String,
+      required: [true, "Street is required"],
+      trim: true,
+    },
+    city: { type: String, required: [true, "City is required"], trim: true },
+    country: {
+      type: String,
+      required: [true, "Country is required"],
+      trim: true,
+    },
   },
-});
-const userAddressSchema = new Schema<TAddress>({
-  street: { type: String, required: [true, "Street is required"], trim: true },
-  city: { type: String, required: [true, "City is required"], trim: true },
-  country: {
-    type: String,
-    required: [true, "Country is required"],
-    trim: true,
-  },
-});
-const userSchema = new Schema<TUser>({
+  { _id: false }
+);
+const userSchema = new Schema<TUser, TUserModel>({
   userId: {
     type: Number,
     required: [true, "User id is required"],
@@ -70,4 +81,29 @@ userSchema.post("save", function (doc, next) {
   next();
 });
 
-export const UserModel = model<TUser>("User", userSchema);
+userSchema.pre("find", function (next) {
+  this.find({ isActive: { $ne: false } });
+  next();
+});
+userSchema.pre("findOne", function (next) {
+  this.find({ isActive: { $ne: false } });
+  next();
+});
+
+userSchema.static("isExistingUser", async function isExistingUser(id: string) {
+  const existingUser = await UserModel.findOne({ userId: id });
+  return existingUser;
+});
+
+export const UserModel = model<TUser, TUserModel>("User", userSchema);
+
+// type Person = {
+//   name: string;
+//   isUserExists(id: string): string;
+// };
+// const person: Person = {
+//   name: "sakib",
+//   isUserExists: function (id) {
+//     return id;
+//   },
+// };

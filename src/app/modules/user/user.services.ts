@@ -9,13 +9,26 @@ export const createUserService = async (userData: TUser) => {
 
 // Get all user into BD
 export const getAllUserService = async () => {
-  const result = await UserModel.find({});
+  const result = await UserModel.find({}).select({
+    _id: 0,
+    username: 1,
+    fullName: 1,
+    age: 1,
+    email: 1,
+    address: 1,
+  });
   return result;
 };
 
 export const getSingleUserService = async (id: string) => {
-  const result = await UserModel.findOne({ userId: id });
-  return result;
+  if (await UserModel.isExistingUser(id)) {
+    const result = await UserModel.findOne({ userId: id }).select({
+      password: 0,
+    });
+    return result;
+  } else {
+    throw new Error("User not found");
+  }
 };
 
 export const deleteUserService = async (id: string) => {
