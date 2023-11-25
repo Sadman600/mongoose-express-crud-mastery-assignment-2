@@ -95,16 +95,17 @@ userSchema.pre("save", async function (next) {
 
 // User save post middleware
 userSchema.post("save", function (doc, next) {
-  // doc.password = "";
+  doc.password = "";
   // const {age} = doc;
-  // delete age;
+  // delete doc.password;
   next();
 });
-
+// User find pre middleware
 userSchema.pre("find", function (next) {
   this.find({ isActive: { $ne: false } });
   next();
 });
+// User findone pre middleware
 userSchema.pre("findOne", function (next) {
   this.find({ isActive: { $ne: false } });
   next();

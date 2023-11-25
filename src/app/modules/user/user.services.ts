@@ -64,8 +64,15 @@ export const updateUserService = async (id: string, updateUser: TUser) => {
 };
 
 export const deleteUserService = async (id: string) => {
-  const result = await UserModel.updateOne({ userId: id }, { isActive: false });
-  return result;
+  if (await UserModel.isExistingUser(id)) {
+    const result = await UserModel.updateOne(
+      { userId: id },
+      { isActive: false }
+    );
+    return result;
+  } else {
+    throw new Error("User not found");
+  }
 };
 
 export const updateOrdersUserService = async (id: string) => {
@@ -93,8 +100,8 @@ export const updateOrdersUserService = async (id: string) => {
 export const getOrderUserService = async (id: string) => {
   if (await UserModel.isExistingUser(id)) {
     const result = await UserModel.findOne({ userId: id }).select({
+      orders: 1,
       _id: 0,
-      password: 0,
     });
     return result;
   } else {

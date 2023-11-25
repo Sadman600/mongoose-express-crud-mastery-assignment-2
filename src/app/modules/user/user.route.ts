@@ -18,10 +18,10 @@ userRoute.post("/", createUserController);
 userRoute.get("/", getAllUserController);
 // Get single  user route
 userRoute.get("/:userId", getSingleUserController);
-// Delete a user route
-userRoute.delete("/:userId", deleteUserController);
 // Update a user route
 userRoute.put("/:userId", updateUserController);
+// Delete a user route
+userRoute.delete("/:userId", deleteUserController);
 
 // User orders route
 userRoute.put("/:userId/orders", ordersUpdateUserController);

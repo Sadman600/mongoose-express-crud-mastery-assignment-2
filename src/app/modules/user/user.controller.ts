@@ -103,17 +103,17 @@ export const updateUserController = async (req: Request, res: Response) => {
 export const deleteUserController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
-    const result = await deleteUserService(userId);
+    await deleteUserService(userId);
     res.status(200).json({
       success: true,
       message: "User delete successfully!",
-      data: result,
+      data: null,
     });
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: "User delete unsuccessfully!",
-      data: error,
+      message: error.message,
+      error: { code: 404, description: "User not found!" },
     });
   }
 };
@@ -125,11 +125,11 @@ export const ordersUpdateUserController = async (
 ) => {
   try {
     const userId = req.params.userId;
-    const result = await updateOrdersUserService(userId);
+    await updateOrdersUserService(userId);
     res.status(200).json({
       success: true,
       message: "Order created successfully!",
-      data: result,
+      data: null,
     });
   } catch (error: any) {
     res.status(500).json({
