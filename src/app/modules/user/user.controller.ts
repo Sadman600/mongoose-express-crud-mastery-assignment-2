@@ -125,7 +125,8 @@ export const ordersUpdateUserController = async (
 ) => {
   try {
     const userId = req.params.userId;
-    await updateOrdersUserService(userId);
+    const ordersData = req.body;
+    await updateOrdersUserService(userId, ordersData);
     res.status(200).json({
       success: true,
       message: "Order created successfully!",

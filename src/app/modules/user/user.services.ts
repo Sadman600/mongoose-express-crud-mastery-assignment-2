@@ -1,4 +1,4 @@
-import { TUser } from "./user.interface";
+import { TOrders, TUser } from "./user.interface";
 import { UserModel } from "./user.schema.model";
 
 // Insert a user into BD
@@ -75,17 +75,17 @@ export const deleteUserService = async (id: string) => {
   }
 };
 
-export const updateOrdersUserService = async (id: string) => {
+export const updateOrdersUserService = async (
+  id: string,
+  ordersData: TOrders
+) => {
   if (await UserModel.isExistingUser(id)) {
     const result = await UserModel.updateOne(
       { userId: id },
       {
-        $push: {
+        $addToSet: {
           orders: {
-            $each: [
-              { productName: "apple", price: 25, quantity: 5 },
-              { productName: "apple", price: 25, quantity: 5 },
-            ],
+            $each: [ordersData],
           },
         },
       }
