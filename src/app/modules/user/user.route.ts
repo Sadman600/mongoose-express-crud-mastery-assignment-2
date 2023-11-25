@@ -3,6 +3,7 @@ import {
   createUserController,
   deleteUserController,
   getAllUserController,
+  getOrderTotalPriceUserController,
   getOrderUserController,
   getSingleUserController,
   ordersUpdateUserController,
@@ -27,6 +28,6 @@ userRoute.put("/:userId/orders", ordersUpdateUserController);
 //  Get all orders for a specific user route
 userRoute.get("/:userId/orders", getOrderUserController);
 // Get Total Price of Orders for a Specific User
-userRoute.get("/:userId/orders", getOrderUserController);
+userRoute.get("/:userId/orders/total-price", getOrderTotalPriceUserController);
 
 export default userRoute;

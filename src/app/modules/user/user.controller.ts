@@ -3,6 +3,7 @@ import {
   createUserService,
   deleteUserService,
   getAllUserService,
+  getOrderTotalPriceUserService,
   getOrderUserService,
   getSingleUserService,
   updateOrdersUserService,
@@ -148,6 +149,28 @@ export const getOrderUserController = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Order fetched successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error: { code: 404, description: "User not found!" },
+    });
+  }
+};
+// Get Total Price of Orders for a Specific User Controller
+export const getOrderTotalPriceUserController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const { userId } = req.params;
+    const result = await getOrderTotalPriceUserService(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Total price calculated successfully!",
       data: result,
     });
   } catch (error: any) {

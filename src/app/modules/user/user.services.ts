@@ -89,12 +89,35 @@ export const updateOrdersUserService = async (id: string) => {
   }
 };
 
-// // Get all orders for a specific user Controller service
+// Get all orders for a specific user service
 export const getOrderUserService = async (id: string) => {
   if (await UserModel.isExistingUser(id)) {
     const result = await UserModel.findOne({ userId: id }).select({
-      orders: 1,
+      _id: 0,
+      password: 0,
     });
+    return result;
+  } else {
+    throw new Error("User not found");
+  }
+};
+// Get Total Price of Orders for a Specific User service
+export const getOrderTotalPriceUserService = async (id: string) => {
+  if (await UserModel.isExistingUser(id)) {
+    const result = await UserModel.aggregate([
+      { $match: { userId: { $eq: id } } },
+      {
+        $unwind: "$orders",
+      },
+      {
+        $group: {
+          _id: null,
+          totalPrice: {
+            $sum: { $multiply: ["$orders.price", "$orders.quantity"] },
+          },
+        },
+      },
+    ]);
     return result;
   } else {
     throw new Error("User not found");
