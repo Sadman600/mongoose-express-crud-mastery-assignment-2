@@ -4,6 +4,8 @@ import {
   deleteUserController,
   getAllUserController,
   getSingleUserController,
+  ordersUpdateUserController,
+  updateUserController,
 } from "./user.controller";
 
 const userRoute = express.Router();
@@ -16,5 +18,12 @@ userRoute.get("/", getAllUserController);
 userRoute.get("/:userId", getSingleUserController);
 // Delete a user route
 userRoute.delete("/:userId", deleteUserController);
+// Update a user route
+userRoute.put("/:userId", updateUserController);
+
+// User orders route
+userRoute.put("/:userId/orders", ordersUpdateUserController);
+// Get Single
+userRoute.get("/:userId/orders", ordersUpdateUserController);
 
 export default userRoute;

@@ -4,6 +4,8 @@ import {
   deleteUserService,
   getAllUserService,
   getSingleUserService,
+  updateOrdersUserService,
+  updateUserService,
 } from "./user.services";
 import { userJoiSchema } from "./user.validation";
 
@@ -30,7 +32,10 @@ export const createUserController = async (req: Request, res: Response) => {
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: error.message || "User created unsuccessfully!",
+      message:
+        error.index === 0
+          ? "User Already has created"
+          : "User created unsuccessfully!",
       data: error,
     });
   }
@@ -57,14 +62,13 @@ export const getSingleUserController = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const result = await getSingleUserService(userId);
+
     res.status(200).json({
       success: true,
       message: "User fetched successfully!",
       data: result,
     });
   } catch (error: any) {
-    // console.log(error);
-
     res.status(500).json({
       success: false,
       message: error.message,
@@ -73,6 +77,27 @@ export const getSingleUserController = async (req: Request, res: Response) => {
   }
 };
 
+// Update a user controller
+export const updateUserController = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const updateUser = req.body;
+    const result = await updateUserService(userId, updateUser);
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error: { code: 404, description: "User not found!" },
+    });
+  }
+};
+
+// Delete a single user Controller
 export const deleteUserController = async (req: Request, res: Response) => {
   try {
     const userId = req.params.userId;
@@ -87,6 +112,28 @@ export const deleteUserController = async (req: Request, res: Response) => {
       success: false,
       message: "User delete unsuccessfully!",
       data: error,
+    });
+  }
+};
+
+// User orders controller
+export const ordersUpdateUserController = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const userId = req.params.userId;
+    const result = await updateOrdersUserService(userId);
+    res.status(200).json({
+      success: true,
+      message: "Order created successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error: { code: 404, description: "User not found!" },
     });
   }
 };

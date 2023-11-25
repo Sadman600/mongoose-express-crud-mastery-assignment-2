@@ -1,5 +1,9 @@
 import { Model } from "mongoose";
-
+export type TOrders = {
+  productName: string;
+  price: number;
+  quantity: number;
+};
 export type TFullName = {
   firstName: string;
   lastName: string;
@@ -19,7 +23,7 @@ export type TUser = {
   isActive: boolean;
   hobbies: string[];
   address: TAddress;
-  sex: "Male" | "Female";
+  orders?: TOrders[];
 };
 
 export interface TUserModel extends Model<TUser> {

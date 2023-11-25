@@ -1,9 +1,24 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcrypt";
 
-import { TAddress, TFullName, TUser, TUserModel } from "./user.interface";
+import {
+  TAddress,
+  TFullName,
+  TOrders,
+  TUser,
+  TUserModel,
+} from "./user.interface";
 import config from "../../config";
 import { func } from "joi";
+
+const userOrderSchema = new Schema<TOrders>(
+  {
+    productName: { type: String, required: true },
+    price: { type: Number, required: true },
+    quantity: { type: Number, required: true },
+  },
+  { _id: false }
+);
 
 const userFullNameSchema = new Schema<TFullName>(
   {
@@ -65,8 +80,10 @@ const userSchema = new Schema<TUser, TUserModel>({
   isActive: { type: Boolean, required: true, default: true },
   hobbies: { type: [String], required: [true, "Must be at least 1 hobbies"] },
   address: { type: userAddressSchema, required: true },
+  orders: { type: [userOrderSchema] },
 });
 
+// User save pre middleware
 userSchema.pre("save", async function (next) {
   const userPassword = this;
   userPassword.password = await bcrypt.hash(
@@ -76,8 +93,11 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// User save post middleware
 userSchema.post("save", function (doc, next) {
-  doc.password = "";
+  // doc.password = "";
+  // const {age} = doc;
+  // delete age;
   next();
 });
 
@@ -96,14 +116,3 @@ userSchema.static("isExistingUser", async function isExistingUser(id: string) {
 });
 
 export const UserModel = model<TUser, TUserModel>("User", userSchema);
-
-// type Person = {
-//   name: string;
-//   isUserExists(id: string): string;
-// };
-// const person: Person = {
-//   name: "sakib",
-//   isUserExists: function (id) {
-//     return id;
-//   },
-// };
