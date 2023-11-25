@@ -88,3 +88,15 @@ export const updateOrdersUserService = async (id: string) => {
     throw new Error("User not found");
   }
 };
+
+// // Get all orders for a specific user Controller service
+export const getOrderUserService = async (id: string) => {
+  if (await UserModel.isExistingUser(id)) {
+    const result = await UserModel.findOne({ userId: id }).select({
+      orders: 1,
+    });
+    return result;
+  } else {
+    throw new Error("User not found");
+  }
+};

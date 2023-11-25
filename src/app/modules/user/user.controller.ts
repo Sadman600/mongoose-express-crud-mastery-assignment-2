@@ -3,6 +3,7 @@ import {
   createUserService,
   deleteUserService,
   getAllUserService,
+  getOrderUserService,
   getSingleUserService,
   updateOrdersUserService,
   updateUserService,
@@ -127,6 +128,26 @@ export const ordersUpdateUserController = async (
     res.status(200).json({
       success: true,
       message: "Order created successfully!",
+      data: result,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      error: { code: 404, description: "User not found!" },
+    });
+  }
+};
+
+// Get all orders for a specific user Controller
+export const getOrderUserController = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await getOrderUserService(userId);
+
+    res.status(200).json({
+      success: true,
+      message: "Order fetched successfully!",
       data: result,
     });
   } catch (error: any) {
